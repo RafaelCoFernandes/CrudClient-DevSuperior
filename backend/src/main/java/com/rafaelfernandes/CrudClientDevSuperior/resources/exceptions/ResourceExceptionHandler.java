@@ -1,4 +1,4 @@
-package com.rafaelfernandes.CrudClientDevSuperior.resources;
+package com.rafaelfernandes.CrudClientDevSuperior.resources.exceptions;
 
 import java.time.Instant;
 
@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.rafaelfernandes.CrudClientDevSuperior.resources.exceptions.StandardError;
 import com.rafaelfernandes.CrudClientDevSuperior.services.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
