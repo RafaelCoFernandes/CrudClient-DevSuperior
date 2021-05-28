@@ -5,6 +5,8 @@ import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rafaelfernandes.CrudClientDevSuperior.dto.ClientDTO;
 import com.rafaelfernandes.CrudClientDevSuperior.entities.Client;
 import com.rafaelfernandes.CrudClientDevSuperior.repositories.ClientRepository;
+import com.rafaelfernandes.CrudClientDevSuperior.services.exceptions.DataBaseException;
 import com.rafaelfernandes.CrudClientDevSuperior.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -36,10 +39,12 @@ public class ClientService {
 
 	@Transactional
 	public ClientDTO insert(ClientDTO dto) {
+
 		Client entity = new Client();
 		copyDtoToEntity(dto, entity);
 		entity = repository.save(entity);
 		return new ClientDTO(entity);
+
 	}
 
 	@Transactional
@@ -49,8 +54,22 @@ public class ClientService {
 			copyDtoToEntity(dto, entity);
 			entity = repository.save(entity);
 			return new ClientDTO(entity);
+
 		} catch (EntityNotFoundException e) {
+
 			throw new ResourceNotFoundException("Id not found " + id);
+		}
+	}
+
+	public void delete(Long id) {
+		try {
+			repository.deleteById(id);
+		}
+		catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Id not found " + id);
+		}
+		catch (DataIntegrityViolationException e) {
+			throw new DataBaseException("Integrity violation");
 		}
 	}
 
